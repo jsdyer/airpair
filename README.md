@@ -3,8 +3,10 @@
 [Open Air Pair](https://coolcode.ca/airpair/) to compare PM2.5 concentrations from two provincial monitoring stations with model estimates in µg/m³. The dashboard runs from a dated snapshot and does not call external APIs from visitors’ browsers.
 
 <!-- coolcode:guide -->
-Open the [Lake Major peak](https://coolcode.ca/airpair/?station=lake-major&start=2023-05-27). Compare the model at the monitor’s highest hour and check how often they crossed 25 µg/m³ together. Change the comparison level or station and inspect daily errors to see how often the weekly average hides larger differences.
+Open the May 2023 Lake Major peak. Compare the model at the monitor’s highest hour and check how often they crossed 25 µg/m³ together. Change the comparison level or station and inspect daily errors to see which days account for the largest errors.
 <!-- /coolcode:guide -->
+
+[Explore the measured Lake Major peak](https://coolcode.ca/airpair/?station=lake-major&start=2023-05-27).
 
 ## Station data
 
