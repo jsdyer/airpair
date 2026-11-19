@@ -277,3 +277,7 @@ footer {
   margin-right: 0.55rem;
   vertical-align: middle;
 }
+
+.analysis {background:#edf3e8;border-inline-start:4px solid var(--teal);padding:1rem 1.25rem;margin:1.2rem 0 1.5rem}
+.analysis select {max-width:10rem;margin:.3rem 0 .7rem}
+.analysis p:last-child {font-size:.85rem;color:var(--muted);margin:0}

@@ -1,4 +1,4 @@
-import { rowsFor, summary, stamp } from "./model.mjs";
+import { rowsFor, summary, stamp, dailyComparisons, thresholdAgreement } from "./model.mjs";
 const el = (id) => document.getElementById(id);
 const site = el("station"),
   period = el("period"),
@@ -96,6 +96,15 @@ function draw() {
   }
   ctx.setLineDash([]);
 }
+function showAgreement() {
+  const cutoff = Number(el("cutoff").value);
+  const { both, monitorOnly, modelOnly, neither } = thresholdAgreement(chartRows, cutoff);
+  const high = both + monitorOnly;
+  el("agreement").textContent = high
+    ? `The monitor reached ${cutoff} µg/m³ in ${high} paired hours. The model reached the same level in ${both} of those hours and missed ${monitorOnly}. It reached that level in ${modelOnly} additional hours when the monitor was below it.`
+    : `The monitor stayed below ${cutoff} µg/m³ in all ${neither + modelOnly} paired hours. The model reached that level in ${modelOnly} hours.`;
+}
+
 function render() {
   const station = snapshot.stations[site.value],
     w = station.windows[Number(period.value)];
@@ -131,12 +140,27 @@ function render() {
   el("metrics").replaceChildren(...cards);
   el("traces").hidden = !hasData;
   el("inactive").hidden = cams || Boolean(stats);
-  el("daily").hidden = cams || !stats;
+  el("daily").hidden = !stats?.count;
+  el("ow-credit").hidden = cams;
+  el("daily-title").textContent = "Daily " + name + " comparison";
   el("results").hidden = false;
   if (hasData) {
     el("model-legend").textContent = name;
     el("model-heading").textContent = name;
     chartRows = rows;
+    el("cutoff").disabled = !stats.count;
+    if (stats.count) {
+      const measured = stats.monitorPeak;
+      const lag = (stats.modelPeak.epoch - measured.epoch) / 3600000;
+      const timing = lag === 0 ? "in the same hour" : `${Math.abs(lag)} ${Math.abs(lag) === 1 ? "hour" : "hours"} ${lag > 0 ? "later" : "earlier"}`;
+      const difference = Math.abs(measured.difference);
+      const level = difference < 0.05 ? "the same to one decimal place" : fixed(difference) + " µg/m³ " + (measured.difference > 0 ? "higher" : "lower");
+      el("peak-reading").textContent = `At the monitor’s highest paired reading (${fixed(measured.monitor)} µg/m³ on ${stamp(measured.epoch)} UTC), ${name} estimated ${fixed(measured.model)} µg/m³, ${level}. Its own peak occurred ${timing}.`;
+      showAgreement();
+    } else {
+      el("peak-reading").textContent = "There are no matched hours in this selection.";
+      el("agreement").textContent = "";
+    }
     draw();
     el("local-heading").textContent = "Station hour (" + station.zone + ")";
     el("reading-rows").replaceChildren(
@@ -164,16 +188,16 @@ function render() {
         " UTC."
       : "The series have no overlapping numeric hours.";
   }
-  if (!cams && stats) {
+  if (stats?.count) {
     el("daily-rows").replaceChildren(
-      ...w.openweather.byInstrument[sensor.value].days.map((d) =>
+      ...dailyComparisons(rows).map((d) =>
         tableRow([
-          d.date,
+          d.day,
           d.count,
           fixed(d.bias),
           fixed(d.mae),
-          d.monitorPeakUtc?.slice(11, 16) ?? "—",
-          d.modelPeakUtc?.slice(11, 16) ?? "—",
+          d.count ? stamp(d.monitorPeak.epoch).slice(11, 16) : "—",
+          d.count ? stamp(d.modelPeak.epoch).slice(11, 16) : "—",
         ]),
       ),
     );
@@ -230,7 +254,16 @@ try {
   const res = await fetch("./data/pairs.json");
   if (!res.ok) throw Error();
   snapshot = await res.json();
+  const params = new URLSearchParams(location.search);
+  const stationId = params.get("station");
+  if (Object.hasOwn(snapshot.stations, stationId)) site.value = stationId;
   setStation();
+  const periodIndex = snapshot.stations[site.value].windows.findIndex(w => w.startUtc.slice(0, 10) === params.get("start"));
+  if (periodIndex >= 0) {
+    period.value = String(periodIndex);
+    setInstrument();
+  }
+  el("cutoff").addEventListener("change", showAgreement);
   site.addEventListener("change", setStation);
   period.addEventListener("change", setInstrument);
   provider.addEventListener("change", render);

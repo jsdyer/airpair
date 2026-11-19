@@ -17,6 +17,7 @@
     <main id="main">
       <h1>{{TITLE}}</h1>
       <p class="intro">{{DESCRIPTION}}</p>
+      <p><a href="?station=lake-major&amp;start=2023-05-27">Explore the May 2023 particle peak at Lake Major →</a></p>
       <div class="controls">
         <label
           >Monitor<select id="station">
@@ -43,6 +44,14 @@
           Global to see the available paired measurements.
         </p>
         <div id="traces">
+          <section class="analysis" aria-labelledby="analysis-title">
+            <h3 id="analysis-title">Did the model catch the high hours?</h3>
+            <p id="peak-reading"></p>
+            <label for="cutoff">Hourly comparison level (µg/m³)</label>
+            <select id="cutoff"><option value="5">5 µg/m³</option><option value="10" selected>10 µg/m³</option><option value="25">25 µg/m³</option><option value="50">50 µg/m³</option></select>
+            <p id="agreement" aria-live="polite"></p>
+            <p class="fine">The level is an analysis setting. Counts use only hours with both readings.</p>
+          </section>
           <div class="chart-heading">
             <h3>Hourly PM2.5</h3>
             <div class="legend">
@@ -75,12 +84,12 @@
           </details>
         </div>
         <div id="daily" hidden>
-          <p>
+          <p id="ow-credit" hidden>
             <a class="ow-credit" href="https://openweathermap.org/"
               >Weather data provided by OpenWeather</a
             >
           </p>
-          <h3>Daily OpenWeather comparison</h3>
+          <h3 id="daily-title">Daily model comparison</h3>
           <p>
             Differences use matched hours only. Peak times are UTC. A positive
             mean indicates the model was higher than the monitor.
