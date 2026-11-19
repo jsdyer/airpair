@@ -198,9 +198,7 @@ def catalogue(data):
 
 
 if __name__ == '__main__':
-    key = os.environ.get('OPENWEATHER_API_KEY') if os.environ.get('OPENWEATHER_ENABLED') == 'true' else None
-    if os.environ.get('OPENWEATHER_ENABLED') == 'true' and not key:
-        raise SystemExit('OpenWeather enabled but no Actions secret configured')
+    key = os.environ.get('COOLCODE_OPENWEATHER_API_KEY')
     data = snapshot(datetime.now(UTC), key)
     temporary = SNAPSHOT.with_suffix('.tmp')
     temporary.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '\n')

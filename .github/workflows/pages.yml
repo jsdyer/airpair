@@ -29,8 +29,7 @@ jobs:
           python-version: '3.12'
       - name: Retrieve and pair station and model data
         env:
-          OPENWEATHER_ENABLED: ${{ vars.OPENWEATHER_ENABLED }}
-          OPENWEATHER_API_KEY: ${{ vars.OPENWEATHER_ENABLED == 'true' && secrets.OPENWEATHER_API_KEY || '' }}
+          COOLCODE_OPENWEATHER_API_KEY: ${{ secrets.COOLCODE_OPENWEATHER_API_KEY }}
         run: python3 scripts/refresh.py
       - name: Validate the comparison before saving
         run: python3 -m unittest discover -s tests -v
