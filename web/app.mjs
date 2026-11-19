@@ -99,11 +99,11 @@ function draw() {
 function render() {
   const station = snapshot.stations[site.value],
     w = station.windows[Number(period.value)];
-  const rows = rowsFor(w, sensor.value),
-    cams = provider.value === "cams";
-  const stats = cams
-    ? summary(rows)
-    : w.openweather.byInstrument?.[sensor.value]?.week;
+  const cams = provider.value === "cams";
+  const name = cams ? "CAMS Global" : "OpenWeather";
+  const hasData = cams || Boolean(w.openweather.byInstrument?.[sensor.value]);
+  const rows = rowsFor(w, sensor.value, provider.value);
+  const stats = hasData ? summary(rows) : null;
   const observed = rows.filter((r) => Number.isFinite(r.monitor)).length;
   el("week").textContent =
     w.startUtc.slice(0, 10) +
@@ -129,11 +129,13 @@ function render() {
       metric("Mean absolute error", fixed(stats.mae) + " µg/m³"),
     );
   el("metrics").replaceChildren(...cards);
-  el("traces").hidden = !cams;
+  el("traces").hidden = !hasData;
   el("inactive").hidden = cams || Boolean(stats);
   el("daily").hidden = cams || !stats;
   el("results").hidden = false;
-  if (cams) {
+  if (hasData) {
+    el("model-legend").textContent = name;
+    el("model-heading").textContent = name;
     chartRows = rows;
     draw();
     el("local-heading").textContent = "Station hour (" + station.zone + ")";
@@ -153,13 +155,16 @@ function render() {
         fixed(stats.monitorPeak.monitor) +
         " µg/m³ at " +
         stamp(stats.monitorPeak.epoch) +
-        " UTC. CAMS peak: " +
+        " UTC. " +
+        name +
+        " peak: " +
         fixed(stats.modelPeak.model) +
         " µg/m³ at " +
         stamp(stats.modelPeak.epoch) +
         " UTC."
       : "The series have no overlapping numeric hours.";
-  } else if (stats) {
+  }
+  if (!cams && stats) {
     el("daily-rows").replaceChildren(
       ...w.openweather.byInstrument[sensor.value].days.map((d) =>
         tableRow([
@@ -184,18 +189,26 @@ function render() {
     " UTC. Latest published station timestamp in this download: " +
     stamp(Date.parse(station.lastSourceHour)) +
     " UTC.";
-  el("sources").replaceChildren(
+  const sourceElements = [
     link(station.source, "Download provincial station data"),
-    " · ",
-    link(w.camsRequest, "Open-Meteo model request"),
-    " · Station coordinates " +
-      station.lat +
-      ", " +
-      station.lon +
-      ". CAMS grid point " +
-      w.camsGrid.map((v) => v.toFixed(2)).join(", ") +
-      ".",
-  );
+    " · Station coordinates " + station.lat + ", " + station.lon + ". ",
+  ];
+  if (cams) {
+    sourceElements.push(
+      link(w.camsRequest, "Open-Meteo model request"),
+      " · CAMS grid point " +
+        w.camsGrid.map((v) => v.toFixed(2)).join(", ") +
+        ".",
+    );
+  } else {
+    sourceElements.push(
+      link(
+        "https://openweathermap.org/api/air-pollution",
+        "OpenWeather historical Air Pollution API",
+      ),
+    );
+  }
+  el("sources").replaceChildren(...sourceElements);
 }
 function setInstrument() {
   const w = snapshot.stations[site.value].windows[Number(period.value)];

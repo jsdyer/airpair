@@ -1,7 +1,17 @@
-export function rowsFor(window, instrument) {
+export function rowsFor(window, instrument, provider = "cams") {
   const start = Date.parse(window.startUtc);
   return window.monitor[instrument].map((monitor, i) => {
-    const model = window.cams[i];
+    let model;
+    if (provider === "cams") {
+      model = window.cams[i];
+    } else {
+      const difference =
+        window.openweather.byInstrument?.[instrument]?.hourlyDifferences?.[i];
+      model =
+        Number.isFinite(difference) && Number.isFinite(monitor)
+          ? Number((monitor + difference).toFixed(6))
+          : null;
+    }
     return {
       epoch: start + i * 3600000,
       monitor,

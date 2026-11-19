@@ -1,4 +1,4 @@
-"""Build dated model/monitor windows from public feeds. Only aggregated OpenWeather results leave this process."""
+"""Build dated model/monitor windows from public feeds. OpenWeather output contains matched differences and period summaries."""
 import csv
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
@@ -21,6 +21,13 @@ BC = 'https://www.env.gov.bc.ca/epd/bcairquality/aqo/csv/Hourly_Raw_Air_Data/Air
 NS = 'https://data.novascotia.ca/api/views/de89-3xrj/rows.csv?accessType=DOWNLOAD'
 CAMS = 'https://air-quality-api.open-meteo.com/v1/air-quality'
 OWM = 'https://api.openweathermap.org/data/2.5/air_pollution/history'
+OW_LICENCE = {
+    'attribution': 'Weather data provided by OpenWeather',
+    'provider': 'https://openweathermap.org/',
+    'database': 'https://opendatacommons.org/licenses/odbl/1-0/',
+    'contents': 'https://creativecommons.org/licenses/by-sa/4.0/',
+    'scope': 'OpenWeather-derived hourly differences and period summaries where provided',
+}
 STATIONS = {
     'langley': dict(name='Langley Central', region='British Columbia', stationId='E209178',
                    lat=49.0956, lon=-122.5671, offset=-8, zone='PST', source=BC,
@@ -152,7 +159,9 @@ def window(st, series, title, start, key):
         model = [estimates.get(t) for t in times]
         summary = {}
         for name, obs in active.items():
-            summary[name] = dict(week=metrics(times, model, obs), days=[
+            differences = [round(predicted - measured, 6) if predicted is not None and measured is not None else None
+                           for predicted, measured in zip(model, obs, strict=True)]
+            summary[name] = dict(hourlyDifferences=differences, week=metrics(times, model, obs), days=[
                 dict(date=times[i].date().isoformat(), **metrics(times[i:i+24], model[i:i+24], obs[i:i+24]))
                 for i in range(0, 168, 24)])
         record['openweather'] = dict(status='available', byInstrument=summary)
@@ -160,7 +169,7 @@ def window(st, series, title, start, key):
 
 
 def snapshot(now, key=None):
-    result = dict(asOf=timestamp(now), unit='µg/m³', stations={})
+    result = dict(asOf=timestamp(now), unit='µg/m³', openweatherLicence=OW_LICENCE, stations={})
     for slug, st in STATIONS.items():
         csv_text = fetch(st['source'], st['name']).decode('utf-8-sig')
         series = parse_station(slug, csv.DictReader(io.StringIO(csv_text)), now)

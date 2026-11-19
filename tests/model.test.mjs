@@ -24,3 +24,24 @@ test("summarizes only matched values and identifies both peaks", () => {
   assert.equal(s.monitorPeak.monitor, 2);
   assert.deepEqual(summary([]), { count: 0 });
 });
+test("reads only the selected provider, reconstructing matched OpenWeather values", () => {
+  const data = {
+    ...w,
+    openweather: {
+      byInstrument: { T640: { hourlyDifferences: [0, -2, null, 7] } },
+    },
+  };
+  const rows = rowsFor(data, "T640", "openweather");
+  assert.deepEqual(
+    rows.map((x) => x.model),
+    [0, 2, null, null],
+  );
+  assert.deepEqual(
+    rowsFor(
+      { ...w, openweather: { status: "inactive" } },
+      "T640",
+      "openweather",
+    ).map((x) => x.model),
+    [null, null, null, null],
+  );
+});

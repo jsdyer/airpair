@@ -39,7 +39,7 @@ def main():
                 assert "AST" in page.locator("#local-heading").inner_text()
                 page.locator("#provider").select_option("openweather")
                 assert page.locator("#inactive").is_visible() or page.locator("#daily").is_visible()
-                assert page.locator("#traces").is_hidden()
+                assert page.locator("#traces").is_hidden() == page.locator("#inactive").is_visible()
                 page.locator("#provider").select_option("cams")
                 page.locator("#hourly summary").click()
                 page.screenshot(path=str(screenshots / "desktop.png"), full_page=True)

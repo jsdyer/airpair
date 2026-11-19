@@ -47,13 +47,13 @@
             <h3>Hourly PM2.5</h3>
             <div class="legend">
               <span class="dot observed">Ground monitor</span
-              ><span class="dot model">CAMS Global</span>
+              ><span class="dot model" id="model-legend">CAMS Global</span>
             </div>
           </div>
           <canvas
             id="chart"
             role="img"
-            aria-label="Hourly PM2.5 measurements and CAMS Global estimates. Exact concentrations and hour labels are in the table below."
+            aria-label="Hourly PM2.5 measurements and the selected model’s estimates. Exact concentrations and hour labels are in the table below."
           ></canvas>
           <p id="peaks"></p>
           <details id="hourly">
@@ -65,7 +65,7 @@
                     <th>UTC hour</th>
                     <th id="local-heading">Station hour</th>
                     <th>Monitor</th>
-                    <th>CAMS</th>
+                    <th id="model-heading">CAMS Global</th>
                     <th>Difference</th>
                   </tr>
                 </thead>
@@ -75,6 +75,11 @@
           </details>
         </div>
         <div id="daily" hidden>
+          <p>
+            <a class="ow-credit" href="https://openweathermap.org/"
+              >Weather data provided by OpenWeather</a
+            >
+          </p>
           <h3>Daily OpenWeather comparison</h3>
           <p>
             Differences use matched hours only. Peak times are UTC. A positive
@@ -114,6 +119,17 @@
         </p>
         <p id="retrieved"></p>
         <p id="sources"></p>
+        <p>
+          Langley measurements are from Metro Vancouver via the Province of
+          British Columbia, under the
+          <a
+            href="https://www2.gov.bc.ca/gov/content/data/open-data/open-government-licence-bc"
+            >B.C. Open Government Licence</a
+          >. Lake Major contains information licensed under the
+          <a href="https://novascotia.ca/opendata/licence.asp"
+            >Open Government Licence – Nova Scotia</a
+          >.
+        </p>
         <p>
           <a href="https://open-meteo.com/en/docs/air-quality-api"
             >Open-Meteo</a

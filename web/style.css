@@ -267,3 +267,13 @@ footer {
     height: 200px;
   }
 }
+
+.ow-credit::before {
+  content: "";
+  background: url("./openweather-logo.png") left center / contain no-repeat;
+  display: inline-block;
+  width: 6rem;
+  height: 2.6rem;
+  margin-right: 0.55rem;
+  vertical-align: middle;
+}
