@@ -45,3 +45,27 @@ export function stamp(epoch, offset = 0) {
     .slice(0, 16)
     .replace("T", " ");
 }
+
+export function thresholdAgreement(rows, cutoff) {
+  const counts = { both: 0, monitorOnly: 0, modelOnly: 0, neither: 0 };
+  for (const row of rows) {
+    if (!Number.isFinite(row.difference)) continue;
+    const observed = row.monitor >= cutoff;
+    const estimated = row.model >= cutoff;
+    if (observed && estimated) counts.both++;
+    else if (observed) counts.monitorOnly++;
+    else if (estimated) counts.modelOnly++;
+    else counts.neither++;
+  }
+  return counts;
+}
+
+export function dailyComparisons(rows) {
+  const byDay = new Map();
+  for (const row of rows) {
+    const day = stamp(row.epoch).slice(0, 10);
+    if (!byDay.has(day)) byDay.set(day, []);
+    byDay.get(day).push(row);
+  }
+  return [...byDay].map(([day, values]) => ({ day, ...summary(values) }));
+}

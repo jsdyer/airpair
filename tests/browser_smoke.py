@@ -35,6 +35,11 @@ def main():
                 page.locator("#station").select_option("lake-major")
                 page.locator("#period").select_option("1")
                 assert "2023-05-27" in page.locator("#week").inner_text()
+                assert "85.4" in page.locator("#peak-reading").inner_text()
+                assert "1 hour later" in page.locator("#peak-reading").inner_text()
+                page.locator("#cutoff").select_option("25")
+                assert "25 µg/m³" in page.locator("#agreement").inner_text()
+                assert page.locator("#daily-rows tr").count() == 7
                 page.locator("#hourly summary").click()
                 assert "AST" in page.locator("#local-heading").inner_text()
                 page.locator("#provider").select_option("openweather")

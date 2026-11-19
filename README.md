@@ -3,7 +3,7 @@
 [Open Air Pair](https://coolcode.ca/airpair/) to compare PM2.5 concentrations from two provincial monitoring stations with model estimates in µg/m³. The dashboard runs from a dated snapshot and does not call external APIs from visitors’ browsers.
 
 <!-- coolcode:guide -->
-Choose Lake Major and May–June 2023 to inspect the hour of the measured particle peak and compare it with the CAMS estimate at the same UTC hour. Langley refreshes from preliminary readings, while Lake Major’s latest validated week follows the provincial annual release. The count includes each paired station-hour once across all displayed weeks.
+Open the [Lake Major peak](https://coolcode.ca/airpair/?station=lake-major&start=2023-05-27). Compare the model at the monitor’s highest hour and check how often they crossed 25 µg/m³ together. Change the comparison level or station and inspect daily errors to see how often the weekly average hides larger differences.
 <!-- /coolcode:guide -->
 
 ## Station data
@@ -18,6 +18,8 @@ The exact provincial files and each CAMS query are linked from the dashboard. Th
 ## How the comparison works
 
 UTC is the join key. Station hours use the fixed source offsets even during summer. The point estimate at the label time is compared to a measured hourly average. National monitoring data follow an [hour-ending convention](https://www.canada.ca/en/environment-climate-change/services/environmental-indicators/air-quality.html). This comparison retains source label times. A model timestamp and an averaged sample can represent different spatial and temporal scales.
+
+At Lake Major on May 30, 2023 at 23:00 UTC, the T640 reached its highest paired concentration of 71.2 µg/m³. CAMS estimated 85.4 µg/m³ at that hour and reached 121.5 µg/m³ one hour later. The comparison levels (5, 10, 25 and 50 µg/m³) let the reader count both-above, monitor-only and model-only hours. Each series must meet or exceed the selected value to count. These are exploratory hourly cutoffs. Both providers use the same paired-hour rules and daily UTC groups.
 
 Each 7-day window has 168 expected UTC timestamps. Missing, nonnumeric and conflicting duplicate readings remain missing. Repeated identical records are counted once within an instrument. Parallel instruments remain individually selectable. Both peaks use only paired hours, and ties select the earliest UTC hour. Mean difference is the average of model minus monitor. Mean absolute error averages the absolute differences. The station-hour count in the catalogue counts an hour once if any instrument and CAMS have a numeric value. It does not add OpenWeather hours to CAMS coverage. An observed concentration cannot identify a pollution source.
 
