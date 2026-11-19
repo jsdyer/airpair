@@ -1,16 +1,59 @@
 {
-  "id": "coolcode-tool-template",
-  "title": "CoolCode Tool Starter",
-  "description": "A browser-only example that trims lines and removes exact duplicates.",
-  "category": "security",
-  "tags": ["text", "lines", "duplicates"],
-  "icon": "scan-search",
-  "url": "/coolcode-tool-template/",
-  "source": "https://github.com/jsdyer/coolcode-tool-template",
+  "id": "airpair",
+  "title": "Air Pair",
+  "description": "Compare hourly fine-particle measurements with air-quality model estimates at Langley Central and Lake Major.",
+  "category": "places",
+  "tags": [
+    "air quality",
+    "PM2.5",
+    "pollution",
+    "CAMS",
+    "OpenWeather",
+    "Langley",
+    "Nova Scotia",
+    "atmospheric science"
+  ],
+  "icon": "activity",
+  "url": "/airpair/",
+  "source": "https://github.com/jsdyer/airpair",
   "hosting": "project",
   "access": "browser",
   "data_info": {
-    "mode": "local",
-    "detail": "The browser reads the text you paste and compares its lines."
+    "mode": "snapshot",
+    "detail": "Daily checks pair B.C. and Nova Scotia station measurements with Copernicus CAMS Global estimates from Open-Meteo. Each station shows its own source dates.",
+    "cadence": "Daily; Nova Scotia releases validated data annually",
+    "probes": [
+      {
+        "url": "https://coolcode.ca/airpair/data/pairs.json",
+        "label": "Data retrieved",
+        "path": [
+          "catalog",
+          "retrieved"
+        ],
+        "count_at": {
+          "path": [
+            "catalog",
+            "pairedHours"
+          ],
+          "unit": "paired station-hours"
+        }
+      },
+      {
+        "url": "https://coolcode.ca/airpair/data/pairs.json",
+        "label": "Latest Langley reading",
+        "path": [
+          "catalog",
+          "langleyLatest"
+        ]
+      },
+      {
+        "url": "https://coolcode.ca/airpair/data/pairs.json",
+        "label": "Latest Lake Major reading",
+        "path": [
+          "catalog",
+          "lakeMajorLatest"
+        ]
+      }
+    ]
   }
 }
