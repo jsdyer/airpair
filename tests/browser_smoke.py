@@ -47,6 +47,14 @@ def main():
                 assert page.locator("#traces").is_hidden() == page.locator("#inactive").is_visible()
                 page.locator("#provider").select_option("cams")
                 page.locator("#hourly summary").click()
+                page.locator('#broader details summary').click()
+                for side,values in [('a','0\n2026-11-01T09:00:00Z,'),('b','10\n2026-11-01T09:00:00Z,5')]:
+                    page.locator('#observation-'+side).set_input_files({'name':side+'.csv','mimeType':'text/csv','buffer':('time,value\n2026-11-01T08:00:00Z,'+values).encode()})
+                page.locator('#observation-form button').click()
+                assert '1 matched hours' in page.locator('#broader-result').inner_text()
+                assert 'Neither file was uploaded' in page.locator('#broader-status').inner_text()
+                with page.expect_download() as event: page.locator('#broader-download').click()
+                assert event.value.suggested_filename=='airpair-comparison.json'
                 page.screenshot(path=str(screenshots / "desktop.png"), full_page=True)
                 page.set_viewport_size({"width": 390, "height": 844})
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")

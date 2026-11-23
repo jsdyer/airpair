@@ -3,7 +3,7 @@
 [Open Air Pair](https://coolcode.ca/airpair/) to compare PM2.5 concentrations from two provincial monitoring stations with model estimates in µg/m³. The dashboard runs from a dated snapshot and does not call external APIs from visitors’ browsers.
 
 <!-- coolcode:guide -->
-Open the May 2023 Lake Major peak. Compare the model at the monitor’s highest hour and check how often they crossed 25 µg/m³ together. Change the comparison level or station and inspect daily errors to see which days account for the largest errors.
+Compare the saved Langley and Lake Major monitor readings with model estimates, then use the broader comparison to explore six pollutants at any two coordinates. Worldwide values are CAMS Global model forecasts. Alternatively, compare two hourly observation CSV files locally, retaining missing hours and calculating differences only where both values exist.
 <!-- /coolcode:guide -->
 
 [Explore the measured Lake Major peak](https://coolcode.ca/airpair/?station=lake-major&start=2023-05-27).
@@ -49,3 +49,10 @@ The optional local browser smoke test uses Playwright and Chromium. Install `tes
 * Langley observations from Metro Vancouver, distributed by the Province of British Columbia. The [provincial station page](https://www.env.gov.bc.ca/epd/bcairquality/data/station.html?id=E209178) identifies its [Open Government Licence – British Columbia](https://www2.gov.bc.ca/gov/content/data/open-data/open-government-licence-bc). Lake Major observations contain information licensed under the [Open Government Licence – Nova Scotia](https://novascotia.ca/opendata/licence.asp).
 * Contains modified Copernicus Atmosphere Monitoring Service information delivered by [Open-Meteo](https://open-meteo.com/en/docs/air-quality-api), provided under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Air Pair converts labels to UTC, aligns source series and calculates differences. The Canadian series uses [ECMWF’s CAMS Global forecast](https://www.ecmwf.int/en/forecasts/datasets/cams-global-atmospheric-composition-forecasts). Open-Meteo also credits the [CAMS ENSEMBLE providers of its European regional service](https://confluence.ecmwf.int/spaces/CKB/pages/202173092/CAMS+Regional+European+air+quality+analysis+and+forecast+data+documentation). The keyless Open-Meteo service is for [non-commercial use](https://open-meteo.com/en/terms).
 * Optional OpenWeather results are powered by [OpenWeather](https://openweathermap.org/). The OpenWeather-derived database of hourly differences and period statistics in `windows[].openweather` is available under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). Its published contents are available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). See the [self-service licensing guide](https://openweathermap.org/guide) and [pricing and licence table](https://openweathermap.org/full-price). The OpenWeather logo is used for attribution under its [brand guidelines](https://openweather.co.uk/brand_guidelines). Original third-party source data retain their respective licences.
+
+
+## Added browser workflow
+
+Compare the saved Langley and Lake Major monitor readings with model estimates, then use the broader comparison to explore six pollutants at any two coordinates. Worldwide values are CAMS Global model forecasts. Alternatively, compare two hourly observation CSV files locally, retaining missing hours and calculating differences only where both values exist.
+
+Local CSV format: `time,value`, followed by hourly ISO timestamps with an explicit UTC offset and concentrations in µg/m³. Use the same pollutant and units in both files; blanks remain missing. Maximum 10,000 readings and 2 MB per file. Global requests are opt-in, cached in the current tab and attributed to CAMS / Open-Meteo.

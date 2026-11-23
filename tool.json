@@ -1,7 +1,7 @@
 {
   "id": "airpair",
   "title": "Air Pair",
-  "description": "Compare hourly fine-particle measurements with air-quality model estimates at Langley Central and Lake Major.",
+  "description": "Compare measured air quality with models, explore worldwide pollutant forecasts and compare local station files.",
   "category": "places",
   "tags": [
     "air quality",
@@ -19,8 +19,8 @@
   "hosting": "project",
   "access": "browser",
   "data_info": {
-    "mode": "snapshot",
-    "detail": "Daily checks pair B.C. and Nova Scotia station measurements with Copernicus CAMS Global estimates from Open-Meteo. Each station shows its own source dates.",
+    "mode": "mixed",
+    "detail": "Saved Canadian monitor/model pairs, opt-in worldwide CAMS forecasts and local hourly CSV comparisons. Model estimates remain distinct from observations.",
     "cadence": "Daily; Nova Scotia releases validated data annually",
     "probes": [
       {

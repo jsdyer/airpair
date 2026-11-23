@@ -281,3 +281,5 @@ footer {
 .analysis {background:#edf3e8;border-inline-start:4px solid var(--teal);padding:1rem 1.25rem;margin:1.2rem 0 1.5rem}
 .analysis select {max-width:10rem;margin:.3rem 0 .7rem}
 .analysis p:last-child {font-size:.85rem;color:var(--muted);margin:0}
+
+.global-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}.global-fields fieldset{border:1px solid #b8c6c0;border-radius:8px;padding:1rem}.global-fields label,#observation-form label{display:grid;gap:.3rem;margin:.7rem 0}.global-fields input{font:inherit;padding:.6rem;min-width:0;width:100%;box-sizing:border-box}#broader form{margin:1.2rem 0}#broader button{font:inherit;padding:.65rem 1rem}#broader-result svg{width:100%;height:auto;max-height:330px;background:#fff}#broader-result{overflow-wrap:anywhere}
