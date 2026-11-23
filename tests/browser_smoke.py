@@ -6,7 +6,7 @@ import os
 import shutil
 import tempfile
 import threading
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -51,7 +51,7 @@ def main():
                 for side,values in [('a','0\n2026-11-01T09:00:00Z,'),('b','10\n2026-11-01T09:00:00Z,5')]:
                     page.locator('#observation-'+side).set_input_files({'name':side+'.csv','mimeType':'text/csv','buffer':('time,value\n2026-11-01T08:00:00Z,'+values).encode()})
                 page.locator('#observation-form button').click()
-                assert '1 matched hours' in page.locator('#broader-result').inner_text()
+                expect(page.locator('#broader-result')).to_contain_text('1 matched hours')
                 assert 'Neither file was uploaded' in page.locator('#broader-status').inner_text()
                 with page.expect_download() as event: page.locator('#broader-download').click()
                 assert event.value.suggested_filename=='airpair-comparison.json'
