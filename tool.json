@@ -21,7 +21,7 @@
   "data_info": {
     "mode": "mixed",
     "detail": "Saved Canadian monitor/model pairs, opt-in worldwide CAMS forecasts and local hourly CSV comparisons. Model estimates remain distinct from observations.",
-    "cadence": "Daily; Nova Scotia releases validated data annually",
+    "cadence": "Daily",
     "probes": [
       {
         "url": "https://coolcode.ca/airpair/data/pairs.json",
