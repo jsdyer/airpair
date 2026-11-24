@@ -56,3 +56,11 @@ The optional local browser smoke test uses Playwright and Chromium. Install `tes
 Compare the saved Langley and Lake Major monitor readings with model estimates, then use the broader comparison to explore six pollutants at any two coordinates. Worldwide values are CAMS Global model forecasts. Alternatively, compare two hourly observation CSV files locally, retaining missing hours and calculating differences only where both values exist.
 
 Local CSV format: `time,value`, followed by hourly ISO timestamps with an explicit UTC offset and concentrations in µg/m³. Use the same pollutant and units in both files; blanks remain missing. Maximum 10,000 readings and 2 MB per file. Global requests are opt-in, cached in the current tab and attributed to CAMS / Open-Meteo.
+
+<!-- schedule-reliability -->
+## Schedule reliability
+
+Public GitHub repositories can have scheduled workflows disabled after 60 days of inactivity. A separate weekly [schedule guard](.github/workflows/schedule-guard.yml) calls GitHub's enable-workflow API for an explicit list of refresh workflows and itself. It can restore workflows disabled for inactivity, preserves manually disabled workflows, and runs independently of collection failures.
+
+This is an interim mitigation, not a scheduling guarantee: GitHub does not document active-workflow renewal as a permanent exemption, and scheduled runs can be delayed or dropped. A scheduler on our own Linux server is the planned independent trigger. The guard does not collect data, create dummy commits, or change source/check timestamps; successful collection and published data freshness still need monitoring.
+<!-- /schedule-reliability -->
