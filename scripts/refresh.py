@@ -18,7 +18,7 @@ WEEK = timedelta(days=7)
 ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT = ROOT / 'web/data/pairs.json'
 BC = 'https://www.env.gov.bc.ca/epd/bcairquality/aqo/csv/Hourly_Raw_Air_Data/Air_Quality/PM25.csv'
-NS = 'https://data.novascotia.ca/api/views/de89-3xrj/rows.csv?accessType=DOWNLOAD'
+NS = 'https://data.novascotia.ca/api/v3/views/de89-3xrj/export.csv'
 CAMS = 'https://air-quality-api.open-meteo.com/v1/air-quality'
 OWM = 'https://api.openweathermap.org/data/2.5/air_pollution/history'
 OW_LICENCE = {

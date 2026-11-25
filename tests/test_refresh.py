@@ -1,3 +1,4 @@
+import csv
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -7,6 +8,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from refresh import UTC, SNAPSHOT, catalogue, metrics, model_values, parse_station
 
 class PairsTests(unittest.TestCase):
+    def test_soda3_export_keeps_ast_hours_missing_values_and_instruments(self):
+        fixture = Path(__file__).parent / 'fixtures/lake-major-soda3.csv'
+        with fixture.open(encoding='utf-8-sig', newline='') as source:
+            series = parse_station('lake-major', csv.DictReader(source), datetime(2026, 1, 2, tzinfo=UTC))
+        self.assertEqual(set(series), {'T640', 'BAM 1020'})
+        expected = {
+            datetime(2025, 12, 31, 4, tzinfo=UTC): 0.0,
+            datetime(2025, 12, 31, 16, tzinfo=UTC): None,
+            datetime(2026, 1, 1, 3, tzinfo=UTC): None,
+            datetime(2026, 1, 1, 4, tzinfo=UTC): 5.7,
+        }
+        self.assertEqual(series['T640'], expected)
+        self.assertEqual(series['BAM 1020'][datetime(2025, 12, 31, 4, tzinfo=UTC)], 2.1)
+
     def test_offsets_in_summer_and_duplicate_sensor_handling(self):
         local = '2023/05/29 12:00:00 AM'
         entry = {'Station':'Lake Major', 'Pollutant':'PM2.5', 'Unit':'µg/m3', 'Instrument':'T640',
